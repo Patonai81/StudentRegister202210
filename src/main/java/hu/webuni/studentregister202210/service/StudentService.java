@@ -1,9 +1,12 @@
 package hu.webuni.studentregister202210.service;
 
+import hu.webuni.studentregister202210.exception.ExternalSystemNotAvailableException;
 import hu.webuni.studentregister202210.model.Student;
 import hu.webuni.studentregister202210.repository.StudentRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +23,10 @@ public class StudentService {
     ExternalFreeSemesterService externalFreeSemesterService;
 
     public Student getStudent(Long id) {
-        return studentRepository.findById(id).get();
+
+        externalFreeSemesterService.getFinancedSemesterNumber(1L);
+        return
+                studentRepository.findById(id).get();
     }
 
     public Set<Student> getAllStudents(){
@@ -28,7 +34,7 @@ public class StudentService {
     }
 
 
-    @Scheduled(cron = "${externalSystem.scheduler.cron}")
+   // @Scheduled(cron = "${externalSystem.scheduler.cron}")
     public void updateUsedSemesters(){
     String methodName = "updateUsedSemesters";
         log.info(methodName+" started");
