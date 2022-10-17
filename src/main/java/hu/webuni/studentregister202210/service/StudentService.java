@@ -23,10 +23,7 @@ public class StudentService {
     ExternalFreeSemesterService externalFreeSemesterService;
 
     public Student getStudent(Long id) {
-
-        externalFreeSemesterService.getFinancedSemesterNumber(1L);
-        return
-                studentRepository.findById(id).get();
+        return studentRepository.findById(id).get();
     }
 
     public Set<Student> getAllStudents(){

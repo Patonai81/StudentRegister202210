@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+@Cacheable
 @Setter
 @Getter
 @AllArgsConstructor
