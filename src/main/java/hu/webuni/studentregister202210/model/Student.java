@@ -31,6 +31,13 @@ public class Student {
     @Column(name = "semester", nullable = false)
     private int semester;
 
+    @Column(name = "usedFreeSemesters", nullable = false)
+    private int usedFreeSemesters;
+
+    @Column(name = "externalId", nullable = false)
+    private int externalId;
+
+
     @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "student_course",

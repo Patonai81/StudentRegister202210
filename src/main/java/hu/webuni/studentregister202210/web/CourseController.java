@@ -8,6 +8,7 @@ import hu.webuni.studentregister202210.model.Course;
 import hu.webuni.studentregister202210.service.CourseFilter;
 import hu.webuni.studentregister202210.service.CourseService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.SortDefault;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/course")
 @AllArgsConstructor
