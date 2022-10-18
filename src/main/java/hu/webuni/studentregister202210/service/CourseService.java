@@ -35,7 +35,7 @@ public class CourseService {
     @Transactional
     public List<Course> getCoursesFull(Predicate courseFilter, Pageable pageable) {
         List<Course> course = Lists.newArrayList(courseRepository.findAll(courseFilter, pageable, "Course.students"));
-        courseRepository.findAll(QCourse.course.in(course), pageable, "Course.teachers");
+        courseRepository.findAll(QCourse.course.in(course), pageable.getSort(), "Course.teachers");
         return course;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.support.CrudMethodMetadata;
 import org.springframework.data.jpa.repository.support.Querydsl;
@@ -46,10 +47,22 @@ public class CourseCustomSearchRepositoryImpl extends SimpleJpaRepository<Course
                 entityManager.getEntityGraph(entityGraphName));
 
         List<Course> content = query.fetch();
-        content.stream().forEach(item -> System.out.println(item));
+   //     content.stream().forEach(item -> System.out.println(item));
        return new PageImpl<>(content, pageable, content.size());
-      //  return content;
     }
+
+    @Override
+    public List<Course> findAll(Predicate predicate, Sort sort, String entityGraphName) {
+
+        JPAQuery query = (JPAQuery) querydsl.applySorting(sort, createQuery(predicate));
+
+        query.setHint(EntityGraph.EntityGraphType.LOAD.getKey(),
+                entityManager.getEntityGraph(entityGraphName));
+
+        return query.fetch();
+    }
+
+
 
     private JPAQuery createQuery(Predicate predicate) {
         return querydsl.createQuery(path).where(predicate);
