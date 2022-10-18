@@ -12,4 +12,7 @@ public interface CourseCustomSearchRepository {
     Page<Course> findAll(Predicate predicate, Pageable pageable, String entityGraphName);
 
     List<Course> findAll(Predicate predicate, Sort sort, String entityGraphName);
-}
+
+     List<Course> findAll(Predicate predicate,String entityGraphName);
+
+    }

@@ -47,7 +47,6 @@ public class CourseCustomSearchRepositoryImpl extends SimpleJpaRepository<Course
                 entityManager.getEntityGraph(entityGraphName));
 
         List<Course> content = query.fetch();
-   //     content.stream().forEach(item -> System.out.println(item));
        return new PageImpl<>(content, pageable, content.size());
     }
 
@@ -55,10 +54,17 @@ public class CourseCustomSearchRepositoryImpl extends SimpleJpaRepository<Course
     public List<Course> findAll(Predicate predicate, Sort sort, String entityGraphName) {
 
         JPAQuery query = (JPAQuery) querydsl.applySorting(sort, createQuery(predicate));
-
         query.setHint(EntityGraph.EntityGraphType.LOAD.getKey(),
                 entityManager.getEntityGraph(entityGraphName));
+        return query.fetch();
+    }
 
+    @Override
+    public List<Course> findAll(Predicate predicate,String entityGraphName) {
+
+        JPAQuery query = (JPAQuery) createQuery(predicate);
+        query.setHint(EntityGraph.EntityGraphType.LOAD.getKey(),
+                entityManager.getEntityGraph(entityGraphName));
         return query.fetch();
     }
 

@@ -8,6 +8,7 @@ import hu.webuni.studentregister202210.model.QCourse;
 import hu.webuni.studentregister202210.repository.CourseRepository;
 import hu.webuni.studentregister202210.repository.CustomCourseRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +35,10 @@ public class CourseService {
 
     @Transactional
     public List<Course> getCoursesFull(Predicate courseFilter, Pageable pageable) {
-        List<Course> course = Lists.newArrayList(courseRepository.findAll(courseFilter, pageable, "Course.students"));
-        courseRepository.findAll(QCourse.course.in(course), pageable.getSort(), "Course.teachers");
-        return course;
+        Page<Course> course=courseRepository.findAll(courseFilter,pageable);
+        courseRepository.findAll(QCourse.course.in(course.getContent()),"Course.students");
+        courseRepository.findAll(QCourse.course.in(course.getContent()), pageable.getSort(), "Course.teachers");
+        return course.getContent();
     }
 
     public Course getCourse(Long id) {
