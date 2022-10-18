@@ -31,7 +31,7 @@ public class StudentService {
     }
 
 
-   // @Scheduled(cron = "${externalSystem.scheduler.cron}")
+    @Scheduled(cron = "${externalSystem.scheduler.cron}")
     public void updateUsedSemesters(){
     String methodName = "updateUsedSemesters";
         log.info(methodName+" started");

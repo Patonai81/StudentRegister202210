@@ -1,6 +1,7 @@
 package hu.webuni.studentregister202210.service;
 
 
+import hu.webuni.studentregister202210.aspect.CustomAOPRetry;
 import hu.webuni.studentregister202210.exception.ExternalSystemNotAvailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
@@ -14,19 +15,20 @@ import java.util.Random;
 @Service
 public class ExternalFreeSemesterService implements RetryAbleTest{
 
-    static int i=0;
-
+    @CustomAOPRetry(retryAttempts=5,sleepInterval = 500)
     public int getFinancedSemesterNumber(Long externalStudentId) throws ExternalSystemNotAvailableException{
         String methodName = "getFinancedSemesterNumber";
-        log.info("called"+i++);
-      /*
+
         log.info(methodName + " " + "started");
         Random random = new Random();
         int result = random.nextInt(0, 10);
-        log.info("Returned remaining " + result + " for sutdent " + externalStudentId);
-*/
-        throw new ExternalSystemNotAvailableException("Hibaaa");
-        //return result;
+        log.info("Returned remaining " + result + " for student " + externalStudentId);
+
+        // The values true and false are produced with (approximately) equal probability.
+        if (random.nextBoolean())
+            throw new ExternalSystemNotAvailableException("A háttérrendszer nem elérhető");
+
+        return result;
     }
 
 
