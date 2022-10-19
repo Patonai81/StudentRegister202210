@@ -14,7 +14,7 @@
     <!-- This configuration is suitable for non-clustered environments, where only single instance accesses the DB -->
     <cache-container name="SpringCacheManager">
 
-        <!-- A config appropriate for query caching. Does not replicate queries. -->
+        <!-- A config appropriate for query caching. Does not replicate queries.  -->
         <local-cache name="courseCache">
             <transaction mode="NONE"/>
             <expiration max-idle="100000" interval="5000"/>

@@ -33,7 +33,7 @@ public class CourseService {
         return Lists.newArrayList(courseRepository.findAll(courseFilter));
     }
 
-    @Cacheable(value = "courseCache")
+    @Cacheable("courseCache")
     @Transactional
     public List<Course> getCoursesFull(Predicate courseFilter, Pageable pageable) {
         Page<Course> course=courseRepository.findAll(courseFilter,pageable);
