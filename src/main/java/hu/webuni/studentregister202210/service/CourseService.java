@@ -8,6 +8,7 @@ import hu.webuni.studentregister202210.model.QCourse;
 import hu.webuni.studentregister202210.repository.CourseRepository;
 import hu.webuni.studentregister202210.repository.CustomCourseRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,10 @@ public class CourseService {
     }
 
     public List<Course> getCourses(Predicate courseFilter) {
-
         return Lists.newArrayList(courseRepository.findAll(courseFilter));
     }
 
+    @Cacheable(value = "courseCache")
     @Transactional
     public List<Course> getCoursesFull(Predicate courseFilter, Pageable pageable) {
         Page<Course> course=courseRepository.findAll(courseFilter,pageable);
