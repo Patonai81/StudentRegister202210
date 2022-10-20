@@ -2,12 +2,14 @@ package hu.webuni.studentregister202210.model;
 
 
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 //@Cacheable
+@Audited
 @ToString
 @Setter
 @Getter

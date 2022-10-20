@@ -1,0 +1,11 @@
+create table course_aud (id int8 not null, rev int4 not null, revtype int2, name varchar(255), primary key (id, rev));
+create table revinfo (rev int4 not null, revtstmp int8, primary key (rev));
+create table student_aud (id int8 not null, rev int4 not null, revtype int2, birth_date date, external_id int4, name varchar(255), semester int4, used_free_semesters int4, primary key (id, rev));
+create table student_course_aud (rev int4 not null, fk_student_id int8 not null, fk_course_id int8 not null, revtype int2, primary key (rev, fk_student_id, fk_course_id));
+create table teacher_aud (id int8 not null, rev int4 not null, revtype int2, birth_date date, name varchar(255), primary key (id, rev));
+create table teacher_course_aud (rev int4 not null, fk_teacher_id int8 not null, fk_course_id int8 not null, revtype int2, primary key (rev, fk_teacher_id, fk_course_id));
+alter table if exists course_aud add constraint FK_COURSE_REVINFO foreign key (rev) references revinfo;
+alter table if exists student_aud add constraint FK_STUDENT_REVINFO foreign key (rev) references revinfo;
+alter table if exists student_course_aud add constraint FK_STUDENT_COURSE_REVINFO foreign key (rev) references revinfo;
+alter table if exists teacher_aud add constraint FK_TEACHER_REVINFO foreign key (rev) references revinfo;
+alter table if exists teacher_course_aud add constraint FK_TEACHER_COURSE_REVINFO foreign key (rev) references revinfo;

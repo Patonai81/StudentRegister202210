@@ -2,6 +2,7 @@ package hu.webuni.studentregister202210.web;
 
 
 import com.querydsl.core.types.Predicate;
+import hu.webuni.studentregister202210.dto.CourseEntityHistoryWrapper;
 import hu.webuni.studentregister202210.mapper.CourseMapper;
 import hu.webuni.studentregister202210.dto.CourseDTO;
 import hu.webuni.studentregister202210.model.Course;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -45,6 +47,22 @@ public class CourseController {
     @GetMapping("/{id}")
     public CourseDTO getCoursebyId(@PathVariable("id") Long id){
         return courseMapper.toCourseDTO(courseService.getCourse(id));
+    }
+
+    @GetMapping("/{id}/history")
+    public List<CourseEntityHistoryWrapper<CourseDTO>> getCourseHistorybyCourseId(@PathVariable("id") Long id){
+
+        return courseService.getHistoryOfCourseWithId(id).stream().map(
+                    item -> {
+                        CourseEntityHistoryWrapper<CourseDTO> mapped = new CourseEntityHistoryWrapper<>(
+                                courseMapper.toCourseDTOFull((Course) item.getCourse()),
+                                item.getRevEntity(),
+                                item.getRevType()
+                        );
+                        return mapped;
+                    }
+            ).collect(Collectors.toList());
+
     }
 
 }
