@@ -15,6 +15,7 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,4 +66,16 @@ public class CourseController {
 
     }
 
-}
+    @GetMapping("/{id}/history/{time}/actual")
+    public CourseEntityHistoryWrapper<CourseDTO> getSnapshotCoursebyCourseIdAndTime(@PathVariable("id") Long id, @PathVariable("time")LocalDateTime time){
+
+        CourseEntityHistoryWrapper<Course>result =  courseService.getCourseSnapshotWithId(id,time);
+        CourseEntityHistoryWrapper<CourseDTO> mapped = new CourseEntityHistoryWrapper<>(
+                            courseMapper.toCourseDTOFull(result.getCourse()),
+                            result.getRevEntity(),
+                            result.getRevType());
+        return mapped;
+    }
+
+
+    }

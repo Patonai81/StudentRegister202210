@@ -42,7 +42,7 @@ public class StudentRegister202210Application implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-        /*
+/*
         Student.StudentBuilder studentBuilder =  Student.builder();
         Student s1 = studentBuilder.birthDate(LocalDate.now()).name("Szabi tanuló").semester(1).build();
         Student savedStudent=studentRepository.save(s1);
@@ -57,9 +57,12 @@ public class StudentRegister202210Application implements CommandLineRunner {
 
         courseService.addStudent(savedCourse.getId(),savedStudent);
         courseService.addTeacher(savedCourse.getId(),savedTeacher);
+
+        Course c2 = courseRepository.findById(44L).get();
+        c2.setName("Envers tanfolyam mod2");
+        Course savedCourse2= courseRepository.save(c2);
+        System.out.println("ID a teszthez: "+savedCourse2.getId());
 */
-
-
 
 
 

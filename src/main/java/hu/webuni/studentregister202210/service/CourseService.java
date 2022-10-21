@@ -17,6 +17,7 @@ import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,28 +54,28 @@ public class CourseService {
     }
 
     @Transactional
-    public void addTeacher(Long courseId,Teacher teacher){
-        Course course= courseRepository.findById(courseId).get();
-        if (course.getTeachers() == null){
+    public void addTeacher(Long courseId, Teacher teacher) {
+        Course course = courseRepository.findById(courseId).get();
+        if (course.getTeachers() == null) {
             course.setTeachers(new HashSet<>());
         }
         course.getTeachers().add(teacher);
-        if (teacher.getTeachingCourses() == null){
+        if (teacher.getTeachingCourses() == null) {
             teacher.setTeachingCourses(new HashSet<>());
         }
         teacher.getTeachingCourses().add(course);
     }
 
     @Transactional
-    public void addStudent(Long courseId, Student student){
-        Course course= courseRepository.findById(courseId).get();
-        if (null == course.getStudents()){
+    public void addStudent(Long courseId, Student student) {
+        Course course = courseRepository.findById(courseId).get();
+        if (null == course.getStudents()) {
             course.setStudents(new HashSet<>());
         }
         course.getStudents().add(student);
 
-        if (null == student.getEnrolledCourses()){
-        student.setEnrolledCourses(new HashSet<>());
+        if (null == student.getEnrolledCourses()) {
+            student.setEnrolledCourses(new HashSet<>());
         }
 
         student.getEnrolledCourses().add(course);
@@ -91,14 +95,10 @@ public class CourseService {
         return courseRepository.findById(id).get();
     }
 
-    //AuditReader.getRevisionForDate
-
     @Transactional
     @SuppressWarnings({"unchecked"})
     public List<CourseEntityHistoryWrapper> getHistoryOfCourseWithId(Long id) {
-        List result = AuditReaderFactory.get(entityManager).createQuery()
-                .forRevisionsOfEntity(Course.class, false, true)
-                .add(AuditEntity.property("id").eq(id)).getResultList();
+        List result = AuditReaderFactory.get(entityManager).createQuery().forRevisionsOfEntity(Course.class, false, true).add(AuditEntity.property("id").eq(id)).getResultList();
 
         return (List<CourseEntityHistoryWrapper>) result.stream().map(item -> {
             Object[] itemArray = (Object[]) item;
@@ -109,15 +109,32 @@ public class CourseService {
             DefaultRevisionEntity defaultRevisionEntity = (DefaultRevisionEntity) itemArray[1];
             RevisionType revisionType = (RevisionType) itemArray[2];
 
-            CourseEntityHistoryWrapper courseEntityHistoryWrapper = new CourseEntityHistoryWrapper<Course>(
-                    course,
-                    defaultRevisionEntity,
-                    revisionType
-            );
+            CourseEntityHistoryWrapper courseEntityHistoryWrapper = new CourseEntityHistoryWrapper<Course>(course, defaultRevisionEntity, revisionType);
             log.info(courseEntityHistoryWrapper.toString());
             return courseEntityHistoryWrapper;
         }).collect(Collectors.toList());
 
+    }
+
+
+    @Transactional
+    @SuppressWarnings({"unchecked"})
+    public CourseEntityHistoryWrapper getCourseSnapshotWithId(Long id, LocalDateTime snapshot) {
+
+        List result = AuditReaderFactory.get(entityManager).createQuery().forRevisionsOfEntity(Course.class, false, false)
+                .add(AuditEntity.revisionProperty("timestamp").le(Date.from(snapshot.atZone(ZoneId.systemDefault()).toInstant()).getTime()))
+                .add(AuditEntity.revisionProperty("timestamp").maximize()
+                        .add(AuditEntity.property("id").eq(id))).getResultList();
+
+        Object[] itemArray = (Object[]) result.get(0);
+        Course course = (Course) itemArray[0];
+        //Forcing to load connected
+        course.getStudents().size();
+        course.getTeachers().size();
+        DefaultRevisionEntity defaultRevisionEntity = (DefaultRevisionEntity) itemArray[1];
+        RevisionType revisionType = (RevisionType) itemArray[2];
+
+        return  new CourseEntityHistoryWrapper<Course>(course, defaultRevisionEntity, revisionType);
     }
 
 }
