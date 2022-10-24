@@ -1,12 +1,10 @@
 package hu.webuni.studentregister202210.mapper;
 
-import hu.webuni.studentregister202210.dto.CourseDTO;
-import hu.webuni.studentregister202210.dto.StudentDTO;
-import hu.webuni.studentregister202210.dto.TeacherDTO;
-import hu.webuni.studentregister202210.model.Course;
-import hu.webuni.studentregister202210.model.Student;
-import hu.webuni.studentregister202210.model.Teacher;
-import org.mapstruct.*;
+import hu.webuni.studentregister202210.model.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 

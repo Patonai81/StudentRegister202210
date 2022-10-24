@@ -1,8 +1,8 @@
 package hu.webuni.studentregister202210.web;
 
 
-import hu.webuni.studentregister202210.dto.TeacherDTO;
 import hu.webuni.studentregister202210.mapper.TeacherMapper;
+import hu.webuni.studentregister202210.model.TeacherDTO;
 import hu.webuni.studentregister202210.service.TeacherService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
