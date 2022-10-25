@@ -1,81 +1,64 @@
 package hu.webuni.studentregister202210.web;
 
-
-import com.querydsl.core.types.Predicate;
-import hu.webuni.studentregister202210.dto.CourseEntityHistoryWrapper;
+import hu.webuni.studentregister202210.mapper.CourseFilterMapper;
 import hu.webuni.studentregister202210.mapper.CourseMapper;
-import hu.webuni.studentregister202210.model.Course;
+import hu.webuni.studentregister202210.mapper.HistoryDataMapper;
 import hu.webuni.studentregister202210.model.CourseDTO;
-import hu.webuni.studentregister202210.service.CourseFilter;
+import hu.webuni.studentregister202210.model.CourseEntityHistoryWrapperDTO;
+import hu.webuni.studentregister202210.model.CourseFilter;
 import hu.webuni.studentregister202210.service.CourseService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
-import org.springframework.data.web.SortDefault;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RestController
-@RequestMapping("/api/course")
 @AllArgsConstructor
-public class CourseController {
+public class CourseController implements CourseControllerApi{
 
-    private CourseService courseService;
+    private final CourseService courseService;
+    private final CourseMapper courseMapper;
+    private final NativeWebRequest nativeWebRequest;
 
-    private CourseMapper courseMapper;
-
-
-    @PostMapping
-    public List<CourseDTO> getAllCourses(@RequestBody  CourseFilter courseFilter){
-            return courseMapper.toCourseDTOList(courseService.getCourses(courseFilter));
+    private final HistoryDataMapper historyDataMapper;
+    private final CourseFilterMapper courseFilterMapper;
+    @Override
+    public Optional<NativeWebRequest> getRequest() {
+        return Optional.of(nativeWebRequest);
     }
 
-    @GetMapping
-    public List<CourseDTO> getAllCourses(@RequestParam Optional<Boolean> full, @QuerydslPredicate(root = Course.class) Predicate predicate,@SortDefault("id") Pageable pageable){
-        boolean isFull = full.orElse(false);
-        if (isFull){
-            return courseMapper.toCourseDTOListFull(courseService.getCoursesFull(predicate,pageable));
-        }
-        return courseMapper.toCourseDTOList(courseService.getCourses(predicate));
+    @Override
+    public ResponseEntity<List<CourseDTO>> getAllCourses(CourseFilter courseFilter) {
+        return ResponseEntity.ok(courseMapper.toCourseDTOList(courseService.getCourses(courseFilterMapper.toCourseFilter(courseFilter))));
     }
 
-    @GetMapping("/{id}")
-    public CourseDTO getCoursebyId(@PathVariable("id") Long id){
-        return courseMapper.toCourseDTO(courseService.getCourse(id));
+    @Override
+    public ResponseEntity<List<CourseDTO>> getAllCourses1(Object predicate, Pageable pageable, Boolean full) {
+        return CourseControllerApi.super.getAllCourses1(predicate, pageable, full);
     }
 
-    @GetMapping("/{id}/history")
-    public List<CourseEntityHistoryWrapper<CourseDTO>> getCourseHistorybyCourseId(@PathVariable("id") Long id){
+    @Override
+    public ResponseEntity<List<CourseEntityHistoryWrapperDTO>> getCourseHistorybyCourseId(Long id) {
 
-        return courseService.getHistoryOfCourseWithId(id).stream().map(
-                    item -> {
-                        CourseEntityHistoryWrapper<CourseDTO> mapped = new CourseEntityHistoryWrapper<>(
-                                courseMapper.toCourseDTOFull((Course) item.getCourse()),
-                                item.getRevEntity(),
-                                item.getRevType()
-                        );
-                        return mapped;
-                    }
-            ).collect(Collectors.toList());
-
+        return ResponseEntity.ok( courseService.getHistoryOfCourseWithId(id).stream().map(
+                item -> {
+                  return historyDataMapper.toCourseEntityHistoryWrapper(item); }
+        ).collect(Collectors.toList()));
     }
 
-    @GetMapping("/{id}/history/{time}/actual")
-    public CourseEntityHistoryWrapper<CourseDTO> getSnapshotCoursebyCourseIdAndTime(@PathVariable("id") Long id, @PathVariable("time")LocalDateTime time){
-
-        CourseEntityHistoryWrapper<Course>result =  courseService.getCourseSnapshotWithId(id,time);
-        CourseEntityHistoryWrapper<CourseDTO> mapped = new CourseEntityHistoryWrapper<>(
-                            courseMapper.toCourseDTOFull(result.getCourse()),
-                            result.getRevEntity(),
-                            result.getRevType());
-        return mapped;
+    @Override
+    public ResponseEntity<CourseDTO> getCoursebyId(Long id) {
+        return ResponseEntity.ok(courseMapper.toCourseDTO(courseService.getCourse(id)));
     }
 
-
+    @Override
+    public ResponseEntity<CourseEntityHistoryWrapperDTO> getSnapshotCoursebyCourseIdAndTime(Long id, LocalDateTime time) {
+        return ResponseEntity.ok(historyDataMapper.toCourseEntityHistoryWrapper(courseService.getCourseSnapshotWithId(id,time)));
     }
+}

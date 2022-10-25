@@ -12,12 +12,10 @@ import hu.webuni.studentregister202210.repository.CourseRepository;
 import hu.webuni.studentregister202210.repository.CustomCourseRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
-import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -109,7 +107,7 @@ public class CourseService {
             DefaultRevisionEntity defaultRevisionEntity = (DefaultRevisionEntity) itemArray[1];
             RevisionType revisionType = (RevisionType) itemArray[2];
 
-            CourseEntityHistoryWrapper courseEntityHistoryWrapper = new CourseEntityHistoryWrapper<Course>(course, defaultRevisionEntity, revisionType);
+            CourseEntityHistoryWrapper courseEntityHistoryWrapper = new CourseEntityHistoryWrapper(course, defaultRevisionEntity, revisionType);
             log.info(courseEntityHistoryWrapper.toString());
             return courseEntityHistoryWrapper;
         }).collect(Collectors.toList());
@@ -134,7 +132,7 @@ public class CourseService {
         DefaultRevisionEntity defaultRevisionEntity = (DefaultRevisionEntity) itemArray[1];
         RevisionType revisionType = (RevisionType) itemArray[2];
 
-        return  new CourseEntityHistoryWrapper<Course>(course, defaultRevisionEntity, revisionType);
+        return  new CourseEntityHistoryWrapper(course, defaultRevisionEntity, revisionType);
     }
 
 }

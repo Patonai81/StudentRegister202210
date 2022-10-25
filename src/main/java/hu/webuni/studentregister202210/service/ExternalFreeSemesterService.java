@@ -4,9 +4,6 @@ package hu.webuni.studentregister202210.service;
 import hu.webuni.studentregister202210.aspect.CustomAOPRetry;
 import hu.webuni.studentregister202210.exception.ExternalSystemNotAvailableException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
