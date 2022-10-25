@@ -19,6 +19,7 @@ import org.hibernate.envers.query.AuditEntity;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
