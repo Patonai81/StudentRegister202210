@@ -9,29 +9,35 @@ import hu.webuni.studentregister202210.model.CourseDTO;
 import hu.webuni.studentregister202210.model.CourseEntityHistoryWrapperCourseDTO;
 import hu.webuni.studentregister202210.model.CourseFilter;
 import hu.webuni.studentregister202210.service.CourseService;
+import hu.webuni.studentregister202210.service.ImageService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.SortDefault;
 import org.springframework.data.web.querydsl.QuerydslPredicateArgumentResolver;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
+@Slf4j
 public class CourseController implements CourseControllerApi{
 
     private final CourseService courseService;
+
+    private final ImageService imageService;
     private final CourseMapper courseMapper;
     private final NativeWebRequest nativeWebRequest;
     private final PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver;
@@ -109,6 +115,17 @@ public class CourseController implements CourseControllerApi{
     public void configPageable(@SortDefault("id") Pageable pageable){}
 
     public void configPredicate(@QuerydslPredicate(root = Course.class) Predicate predicate){}
+
+    @Override
+    public ResponseEntity<Long> uploadImageForStudent(Long id, String fileName, MultipartFile content) {
+        try {
+            return ResponseEntity.ok(imageService.save(content.getInputStream(), fileName, id));
+        }catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
 }
 

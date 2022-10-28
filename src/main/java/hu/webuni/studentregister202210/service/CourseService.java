@@ -4,12 +4,11 @@ package hu.webuni.studentregister202210.service;
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.Predicate;
 import hu.webuni.studentregister202210.dto.CourseEntityHistoryWrapper;
-import hu.webuni.studentregister202210.model.Course;
-import hu.webuni.studentregister202210.model.QCourse;
-import hu.webuni.studentregister202210.model.Student;
-import hu.webuni.studentregister202210.model.Teacher;
+import hu.webuni.studentregister202210.model.*;
 import hu.webuni.studentregister202210.repository.CourseRepository;
 import hu.webuni.studentregister202210.repository.CustomCourseRepository;
+import hu.webuni.studentregister202210.repository.ImageDBRepository;
+import hu.webuni.studentregister202210.repository.ImageFileSystemRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.envers.AuditReaderFactory;
@@ -19,7 +18,6 @@ import org.hibernate.envers.query.AuditEntity;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -135,5 +133,7 @@ public class CourseService {
 
         return  new CourseEntityHistoryWrapper(course, defaultRevisionEntity, revisionType);
     }
+
+
 
 }

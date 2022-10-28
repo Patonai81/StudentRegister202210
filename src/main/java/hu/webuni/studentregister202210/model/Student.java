@@ -39,6 +39,8 @@ public class Student {
     @Column(name = "externalId", nullable = false)
     private int externalId;
 
+    @OneToOne
+    private Image image;
 
     @ToString.Exclude
     @ManyToMany
