@@ -1,0 +1,325 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: 'http://localhost:8080'
+    description: Generated server url
+paths:
+  /api/course:
+    get:
+      tags:
+        - course-controller
+      operationId: getAllCourses_1
+      parameters:
+        - name: full
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - schema:
+            type: integer
+          in: query
+          name: page
+        - schema:
+            type: integer
+          in: query
+          name: size
+        - schema:
+            type: string
+          in: query
+          name: sort
+        - schema:
+            type: integer
+            format: int64
+          in: query
+          name: id
+        - schema:
+            type: string
+          in: query
+          name: name
+        - schema:
+            type: string
+          in: query
+          name: enrolledCourses.name
+        - schema:
+            type: array
+            items:
+              type: integer
+          in: query
+          name: students.semester
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseDTO'
+    post:
+      tags:
+        - course-controller
+      operationId: getAllCourses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseFilter'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseDTO'
+  '/api/teacher/{id}':
+    get:
+      tags:
+        - teacher-controller
+      operationId: getTeacherbyId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherDTO'
+  '/api/student/{id}':
+    get:
+      tags:
+        - student-controller
+      operationId: getStudentbyId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentDTO'
+  '/api/course/{id}':
+    get:
+      tags:
+        - course-controller
+      operationId: getCoursebyId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDTO'
+  '/api/course/{id}/history':
+    get:
+      tags:
+        - course-controller
+      operationId: getCourseHistorybyCourseId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseEntityHistoryWrapperCourseDTO'
+  '/api/course/{id}/history/{time}/actual':
+    get:
+      tags:
+        - course-controller
+      operationId: getSnapshotCoursebyCourseIdAndTime
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: time
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseEntityHistoryWrapperCourseDTO'
+  '/api/course/{id}/images':
+    parameters:
+      - schema:
+          type: integer
+          format: int64
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
+      tags:
+        - course-controller
+      operationId: uploadImageForStudent
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+      description: ''
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                content:
+                  type: string
+                  format: binary
+  '/api/images/{id}':
+    parameters:
+      - schema:
+          type: integer
+          format: int64
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - images-controller
+      operationId: getStudentImage
+      responses:
+        '200':
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+                
+components:
+  schemas:
+    CourseFilter:
+      type: object
+      properties:
+        courseName:
+          type: string
+        courseId:
+          type: integer
+          format: int64
+        courseStudentId:
+          type: integer
+          format: int64
+        semesterPeriodFrom:
+          type: integer
+          format: int32
+        semesterPeriodTo:
+          type: integer
+          format: int32
+        courseTeacher:
+          type: string
+    CourseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        students:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentDTO'
+        teachers:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/TeacherDTO'
+    StudentDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        semester:
+          type: integer
+          format: int32
+    TeacherDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+    CourseEntityHistoryWrapperCourseDTO:
+      type: object
+      properties:
+        course:
+          $ref: '#/components/schemas/CourseDTO'
+        revEntity:
+          $ref: '#/components/schemas/DefaultRevisionEntity'
+        revType:
+          type: string
+          enum:
+            - ADD
+            - MOD
+            - DEL
+    DefaultRevisionEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        timestamp:
+          type: integer
+          format: int64
+        revisionDate:
+          type: string
+          format: date-time
