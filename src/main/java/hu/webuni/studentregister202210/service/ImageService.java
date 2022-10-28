@@ -2,6 +2,7 @@ package hu.webuni.studentregister202210.service;
 
 import hu.webuni.studentregister202210.model.Image;
 import hu.webuni.studentregister202210.model.Student;
+import hu.webuni.studentregister202210.repository.CourseRepository;
 import hu.webuni.studentregister202210.repository.ImageDBRepository;
 import hu.webuni.studentregister202210.repository.ImageFileSystemRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,11 @@ public class ImageService {
 
     private final StudentService studentService;
 
+    private final CourseRepository courseRepository;
 
     public FileSystemResource find(Long studentId) {
+        System.out.println("CHECCCCK");
+        courseRepository.getCourseAVGStudentSemester().stream().forEach(item -> System.out.println(item));
 
         Student student = studentService.getStudent(studentId);
         if (null == student){
