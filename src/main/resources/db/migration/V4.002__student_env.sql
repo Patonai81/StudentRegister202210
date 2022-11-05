@@ -1,0 +1,1 @@
+alter table student_aud  add  balance int8;

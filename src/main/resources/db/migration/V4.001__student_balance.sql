@@ -1,0 +1,1 @@
+alter table student  add  balance int8;
