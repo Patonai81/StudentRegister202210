@@ -249,8 +249,9 @@
                 <configuration>
                     <!-- The name of your generated source package -->
                     <packageName>hu.webuni.studentregister202210.wsclient</packageName>
+
                     <wsdlUrls>
-                        <wsdlUrl>http://localhost:8081/services/semester?wsdl</wsdlUrl>
+                        <wsdlUrl>file://${basedir}/wsdl/StudentSOAP.wsdl</wsdlUrl>
                     </wsdlUrls>
                     <bindingDirectory>${basedir}/wsdl</bindingDirectory>
                 </configuration>

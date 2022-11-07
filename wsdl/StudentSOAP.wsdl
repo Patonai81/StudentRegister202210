@@ -1,0 +1,42 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.kozpontirendszerxmlws.example.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SemesterXmlWsImplService" targetNamespace="http://ws.kozpontirendszerxmlws.example.com/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.kozpontirendszerxmlws.example.com/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://ws.kozpontirendszerxmlws.example.com/" version="1.0">
+            <xs:element name="getFinancedSemesterNumber" type="tns:getFinancedSemesterNumber"/>
+            <xs:complexType name="getFinancedSemesterNumber">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getFinancedSemesterNumberResponse" nillable="true" type="xs:int"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getFinancedSemesterNumber">
+        <wsdl:part element="tns:getFinancedSemesterNumber" name="parameters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getFinancedSemesterNumberResponse">
+        <wsdl:part element="tns:getFinancedSemesterNumberResponse" name="parameters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="SemesterXmlWs">
+        <wsdl:operation name="getFinancedSemesterNumber">
+            <wsdl:input message="tns:getFinancedSemesterNumber" name="getFinancedSemesterNumber"></wsdl:input>
+            <wsdl:output message="tns:getFinancedSemesterNumberResponse" name="getFinancedSemesterNumberResponse"></wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SemesterXmlWsImplServiceSoapBinding" type="tns:SemesterXmlWs">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getFinancedSemesterNumber">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getFinancedSemesterNumber">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getFinancedSemesterNumberResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SemesterXmlWsImplService">
+        <wsdl:port binding="tns:SemesterXmlWsImplServiceSoapBinding" name="SemesterXmlWsImplPort">
+            <soap:address location="http://localhost:8081/services/semester"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
