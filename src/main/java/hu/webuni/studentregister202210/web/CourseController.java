@@ -20,6 +20,7 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.data.web.querydsl.QuerydslPredicateArgumentResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,6 +55,7 @@ public class CourseController implements CourseControllerApi{
 
     @Override
     public ResponseEntity<List<CourseDTO>> getAllCourses(CourseFilter courseFilter) {
+        log.info("User performing action is: "+SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok(courseMapper.toCourseDTOList(courseService.getCourses(courseFilterMapper.toCourseFilter(courseFilter))));
     }
 
