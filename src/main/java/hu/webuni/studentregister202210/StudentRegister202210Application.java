@@ -6,6 +6,7 @@ import hu.webuni.studentregister202210.model.Teacher;
 import hu.webuni.studentregister202210.repository.CourseRepository;
 import hu.webuni.studentregister202210.repository.StudentRepository;
 import hu.webuni.studentregister202210.repository.TeacherRepository;
+import hu.webuni.studentregister202210.repository.UserSecurityRepository;
 import hu.webuni.studentregister202210.service.CourseFilter;
 import hu.webuni.studentregister202210.service.CourseService;
 import lombok.AllArgsConstructor;
@@ -13,12 +14,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
 @SpringBootApplication
@@ -26,13 +30,16 @@ import java.util.List;
 public class StudentRegister202210Application implements CommandLineRunner {
 
 
-   private CourseService courseService;
+    private CourseService courseService;
 
-   private StudentRepository studentRepository;
+    private UserSecurityRepository userSecurityRepository;
+    private StudentRepository studentRepository;
 
-   private CourseRepository courseRepository;
+    private CourseRepository courseRepository;
 
-   private TeacherRepository teacherRepository;
+    private TeacherRepository teacherRepository;
+
+    private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(StudentRegister202210Application.class, args);
@@ -42,10 +49,17 @@ public class StudentRegister202210Application implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-/*
-        Student.StudentBuilder studentBuilder =  Student.builder();
-        Student s1 = studentBuilder.birthDate(LocalDate.now()).name("Szabi tanuló").semester(1).build();
-        Student savedStudent=studentRepository.save(s1);
+        userSecurityRepository.deleteAll();
+        studentRepository.deleteAll();
+        studentRepository.save(Student.builder().birthDate(LocalDate.now()).name("Szabi builder")
+                        .semester(3)
+                        .balance(111L)
+                        .userName("Noel")
+                        .password(passwordEncoder.encode("pass"))
+                        .roles(Set.of("USER","ADMIN"))
+                .build());
+
+ /*
 
         Teacher.TeacherBuilder teacherBuilder = Teacher.builder();
         Teacher t1 = teacherBuilder.birthDate(LocalDate.of(1988,4,23)).name("Tícsör").build();
@@ -63,7 +77,6 @@ public class StudentRegister202210Application implements CommandLineRunner {
         Course savedCourse2= courseRepository.save(c2);
         System.out.println("ID a teszthez: "+savedCourse2.getId());
 */
-
 
 
     }

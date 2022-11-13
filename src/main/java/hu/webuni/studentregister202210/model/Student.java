@@ -1,6 +1,7 @@
 package hu.webuni.studentregister202210.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -12,17 +13,10 @@ import java.util.Set;
 //@Cacheable
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString
 @Entity
-public class Student {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Student extends UserSecurity{
 
     @Column(name = "balance", nullable = false)
     private Long balance;
@@ -52,4 +46,16 @@ public class Student {
             inverseJoinColumns = { @JoinColumn(name = "fk_course_id") })
     Set<Course> enrolledCourses= new HashSet<>();
 
+    @Builder
+    private Student(String userName, String password, Set<String> roles, Long balance, String name, LocalDate birthDate, int semester, int usedFreeSemesters, int externalId, Image image, Set<Course> enrolledCourses) {
+        super(userName, password, roles);
+        this.balance = balance;
+        this.name = name;
+        this.birthDate = birthDate;
+        this.semester = semester;
+        this.usedFreeSemesters = usedFreeSemesters;
+        this.externalId = externalId;
+        this.image = image;
+        this.enrolledCourses = enrolledCourses;
+    }
 }

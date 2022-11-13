@@ -18,12 +18,7 @@ import java.util.Set;
 @Builder
 @ToString
 @Entity
-public class Teacher {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Teacher extends UserSecurity{
 
     @Column(name = "name", nullable = false)
     private String name;

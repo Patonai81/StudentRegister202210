@@ -6,22 +6,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Properties;
+import javax.annotation.Resource;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Resource
+    private UserDetailsService userDetailsService;
+
 
     @Autowired
     JwtFilter jwtFilter;
@@ -32,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
+ /* OLD'school
     @Bean
     public InMemoryUserDetailsManager getInMemoryUserDetailsManager(){
         InMemoryUserDetailsManager inMemoryUserDetailsManager=new InMemoryUserDetailsManager();
@@ -41,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return inMemoryUserDetailsManager;
     }
 
-    /* OLD'school
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -54,11 +58,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 */
 
+
+    @Bean
+    public DaoAuthenticationProvider authProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(getInMemoryUserDetailsManager()).passwordEncoder(passwordEncoder());
-
+        auth.authenticationProvider(authProvider());
     }
+
 
 
         @Override
