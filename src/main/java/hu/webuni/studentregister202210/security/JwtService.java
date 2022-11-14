@@ -3,6 +3,9 @@ package hu.webuni.studentregister202210.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import hu.webuni.studentregister202210.model.UserSecurity;
+import hu.webuni.studentregister202210.repository.UserSecurityRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
+
+    @Autowired
+    UserSecurityRepository userSecurityRepository;
 
     public static final Algorithm MYSECRET = Algorithm.HMAC256("mysecret");
     public static final String STUDENT_APP = "StudentApp";
@@ -30,8 +36,10 @@ public class JwtService {
     }
 
 
-    public UserDetails parseJWT(String jwtToken) {
+    public UserSecurity parseJWT(String jwtToken) {
         DecodedJWT decodedJWT = JWT.require(MYSECRET).withIssuer(STUDENT_APP).build().verify(jwtToken);
-        return new User(decodedJWT.getSubject(),"",decodedJWT.getClaim(AUTH).asList(String.class).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        UserSecurity userSecurity= userSecurityRepository.findByUserName(decodedJWT.getSubject());
+        return userSecurity;
+        //return new User(decodedJWT.getSubject(),"",decodedJWT.getClaim(AUTH).asList(String.class).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }
 }
