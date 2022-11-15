@@ -31,8 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     JwtFilter jwtFilter;
 
     @Bean
-    PasswordEncoder passwordEncoder(){
-       return new BCryptPasswordEncoder();
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 
@@ -73,20 +73,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
-        @Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
-      //  http.httpBasic()
-                http.csrf().disable()
+        //  http.httpBasic()
+        http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/api/login/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/teacher/**").hasAnyAuthority("USER","ADMIN")
+                .antMatchers("/topic/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/login/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/teacher/**").hasAnyAuthority("USER", "ADMIN")
                 .anyRequest()
                 .authenticated();
 
-                http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 
