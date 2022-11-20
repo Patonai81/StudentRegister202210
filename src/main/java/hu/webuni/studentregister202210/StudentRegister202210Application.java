@@ -57,6 +57,7 @@ public class StudentRegister202210Application implements CommandLineRunner {
                         .userName("Noel")
                         .password(passwordEncoder.encode("pass"))
                         .roles(Set.of("USER","ADMIN"))
+
                 .build());
 
  /*

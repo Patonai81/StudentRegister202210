@@ -77,15 +77,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //  http.httpBasic()
         http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                //OAUTH miatt ki kell kapcsolni
+                //   .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //   .and()
                 .authorizeRequests()
+            //    .antMatchers("https://www.facebook.com/**").permitAll()
+            //    .antMatchers("/szabi/**").permitAll()
+                .antMatchers("/oauth2/**").permitAll()
+                .antMatchers("/fbLoginSuccess").permitAll()
                 .antMatchers("/topic/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/login/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/teacher/**").hasAnyAuthority("USER", "ADMIN")
                 .anyRequest()
-                .authenticated();
-
+                .authenticated()
+                .and()
+                .oauth2Login()
+                .defaultSuccessUrl("/fbLoginSuccess", true);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

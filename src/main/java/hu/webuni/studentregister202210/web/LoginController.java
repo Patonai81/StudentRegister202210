@@ -2,6 +2,7 @@ package hu.webuni.studentregister202210.web;
 
 import hu.webuni.studentregister202210.dto.LoginDTO;
 import hu.webuni.studentregister202210.security.JwtService;
+import hu.webuni.studentregister202210.service.FacebookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,13 +24,20 @@ public class LoginController {
 
     private final JwtService jwtService;
 
+    private final FacebookService facebookService;
 
 
     @PostMapping
     public String login(@RequestBody LoginDTO loginDTO){
         log.debug(loginDTO.toString());
+        UserDetails principal = null;
 
-      Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(),loginDTO.getPassword()));
-      return jwtService.createJwTToken((UserDetails)authentication.getPrincipal());
+        if (null == loginDTO.getFbToken()) {
+           Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
+            principal = (UserDetails) authentication.getPrincipal();
+        }else {
+          principal= facebookService.getUserDetailsFromFBToken(loginDTO.getFbToken());
+       }
+        return jwtService.createJwTToken(principal);
     }
 }

@@ -10,4 +10,8 @@ public interface UserSecurityRepository extends JpaRepository<UserSecurity, Long
 
     @Query("select u from UserSecurity  u where u.userName= :userName")
     UserSecurity findByUserName(String userName);
+
+    UserSecurity findByFacebookId(String facebookId);
+
+
 }

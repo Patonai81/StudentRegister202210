@@ -47,8 +47,8 @@ public class Student extends UserSecurity{
     Set<Course> enrolledCourses= new HashSet<>();
 
     @Builder
-    private Student(String userName, String password, Set<String> roles, Long balance, String name, LocalDate birthDate, int semester, int usedFreeSemesters, int externalId, Image image, Set<Course> enrolledCourses) {
-        super(userName, password, roles);
+    private Student(String userName, String password, Set<String> roles, Long balance, String name, LocalDate birthDate, int semester, int usedFreeSemesters, int externalId, Image image, Set<Course> enrolledCourses,String facebookId) {
+        super(userName, password,roles);
         this.balance = balance;
         this.name = name;
         this.birthDate = birthDate;

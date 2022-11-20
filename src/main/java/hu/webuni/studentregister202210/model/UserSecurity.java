@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class UserSecurity implements UserDetails {
     protected String userName;
     @NonNull
     protected String password;
+    protected String facebookId;
 
     @NonNull
     @ElementCollection(fetch= FetchType.EAGER)
