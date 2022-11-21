@@ -12,9 +12,9 @@ create table teacher (birth_date date not null, name varchar(255) not null, id i
 create table teacher_aud (id int8 not null, rev int4 not null, birth_date date, name varchar(255), primary key (id, rev));
 create table teacher_course (fk_teacher_id int8 not null, fk_course_id int8 not null, primary key (fk_teacher_id, fk_course_id));
 create table teacher_course_aud (rev int4 not null, fk_teacher_id int8 not null, fk_course_id int8 not null, revtype int2, primary key (rev, fk_teacher_id, fk_course_id));
-create table user_security_aud (id int8 not null, rev int4 not null, revtype int2, facebook_id varchar(255), password varchar(255), user_name varchar(255), primary key (id, rev));
+create table user_security_aud (id int8 not null, rev int4 not null, revtype int2, facebook_id varchar(255), google_id varchar(255), password varchar(255), user_name varchar(255), primary key (id, rev));
 create table user_security_roles_aud (rev int4 not null, user_security_id int8 not null, roles varchar(255) not null, revtype int2, primary key (rev, user_security_id, roles));
-create table user_security (id int8 not null, facebook_id varchar(255), password varchar(255), user_name varchar(255), primary key (id));
+create table user_security (id int8 not null, facebook_id varchar(255), google_id varchar(255), password varchar(255), user_name varchar(255), primary key (id));
 create table user_security_roles (user_security_id int8 not null, roles varchar(255));
 alter table if exists course_aud add constraint FK7wota7b9g9bu9by751v8r8j65 foreign key (rev) references revinfo;
 alter table if exists image_aud add constraint FKetc5y2t13bkdk5yuj4eswagd4 foreign key (rev) references revinfo;

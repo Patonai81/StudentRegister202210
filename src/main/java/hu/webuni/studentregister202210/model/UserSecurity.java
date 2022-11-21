@@ -32,6 +32,7 @@ public class UserSecurity implements UserDetails {
     @NonNull
     protected String password;
     protected String facebookId;
+    protected String googleId;
 
     @NonNull
     @ElementCollection(fetch= FetchType.EAGER)

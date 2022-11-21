@@ -13,5 +13,8 @@ public interface UserSecurityRepository extends JpaRepository<UserSecurity, Long
 
     UserSecurity findByFacebookId(String facebookId);
 
+    UserSecurity findByGoogleId(String googleId);
+
+
 
 }

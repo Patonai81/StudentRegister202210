@@ -1,6 +1,6 @@
 package hu.webuni.studentregister202210.web;
 
-import hu.webuni.studentregister202210.service.FacebookService;
+import hu.webuni.studentregister202210.service.CommunityLoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +18,15 @@ import java.util.Map;
 public class FacebookLoginController {
 
     @Autowired
-    FacebookService facebookService;
+    CommunityLoginService communityLoginService;
 
     @RequestMapping("/fbLoginSuccess")
     public String onFacebookLoginSuccess(Map<String,Object> model, OAuth2AuthenticationToken oAuth2AuthenticationToken
     , @AuthenticationPrincipal OAuth2User user){
         String fullName = oAuth2AuthenticationToken.getPrincipal().getAttribute("name");
-        String token = facebookService.extractToken(oAuth2AuthenticationToken);
+        String token = communityLoginService.extractToken(oAuth2AuthenticationToken);
         model.put("fullName",fullName);
-        model.put("token",token );
+        model.put("token",token);
         return "home";
     }
 }

@@ -81,8 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //   .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 //   .and()
                 .authorizeRequests()
-            //    .antMatchers("https://www.facebook.com/**").permitAll()
-            //    .antMatchers("/szabi/**").permitAll()
                 .antMatchers("/oauth2/**").permitAll()
                 .antMatchers("/fbLoginSuccess").permitAll()
                 .antMatchers("/topic/**").permitAll()
@@ -94,6 +92,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2Login()
                 .defaultSuccessUrl("/fbLoginSuccess", true);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+      //http://localhost:8083/szabi/login/oauth2/fbLoginSuccess
+       // http://localhost:8083/szabi/login/oauth2/googleLoginSuccess
     }
 
 
