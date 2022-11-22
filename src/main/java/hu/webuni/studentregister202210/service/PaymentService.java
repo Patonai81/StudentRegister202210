@@ -5,7 +5,12 @@ import hu.webuni.studentregister202210.model.Student;
 import hu.webuni.studentregister202210.repository.StudentRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,8 +22,9 @@ public class PaymentService {
 
     private final StudentRepository studentRepository;
 
+
     @Transactional
-    @JmsListener(destination = "payment", containerFactory = "myFactory")
+    @JmsListener(destination = "payment", containerFactory = "paymentFactory")
     public void onPayment(PaymentMesssage paymentMesssage) {
 
         log.info("Message arrived" + paymentMesssage);
@@ -35,5 +41,9 @@ public class PaymentService {
         }
 
     }
+
+
+
+
 
 }
