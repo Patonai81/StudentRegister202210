@@ -50,7 +50,7 @@ public class ExternalFreeSemesterService implements RetryAbleTest {
         return result;
     }
 
-    @Scheduled(cron = "${externalSystem.scheduler.cron}")
+  //  @Scheduled(cron = "${externalSystem.scheduler.cron}")
     public void askFreeSemester(){
         log.info("Scheduler is RUNNING...");
         getFinancedSemesterNumberJMS(1L);
